@@ -187,23 +187,51 @@
     background:var(--paper);color:var(--ink);border-radius:18px;
     padding:22px 20px;position:relative;
   }
-  .storybook h3{font-size:1.3rem;margin-bottom:10px;color:var(--ink)}
-  .storybook p{font-size:.98rem;line-height:1.75}
+  .storybook h3{font-size:1.55rem;margin-bottom:12px;color:var(--ink)}
+  .excerpt-scroll{
+    max-height:420px;overflow-y:auto;overscroll-behavior:contain;
+    padding-right:6px;-webkit-overflow-scrolling:touch;
+  }
+  .excerpt-scroll::-webkit-scrollbar{width:6px}
+  .excerpt-scroll::-webkit-scrollbar-track{background:rgba(29,39,82,.08);border-radius:999px}
+  .excerpt-scroll::-webkit-scrollbar-thumb{background:rgba(29,39,82,.28);border-radius:999px}
+  .excerpt-scroll::-webkit-scrollbar-thumb:hover{background:rgba(29,39,82,.45)}
+  .excerpt-scroll{scrollbar-width:thin;scrollbar-color:rgba(29,39,82,.28) rgba(29,39,82,.08)}
+  [data-excerpt]{font-size:1.18rem;line-height:1.7;white-space:pre-wrap;margin:0}
   .storybook .page-note{margin-top:14px;font-size:.8rem;color:#8B87A8;font-style:italic}
   .storybook .corner-doodle{position:absolute;top:-16px;right:-12px}
-  .gate{text-align:center;padding:22px 4px 0}
-  .gate p{font-size:.96rem;color:var(--paper-dim);margin-bottom:14px}
-  .gate strong{color:var(--paper)}
-  .gate-form{display:flex;flex-direction:column;gap:10px}
-  .gate-form .text-input{width:100%;border-radius:999px}
-  .gate-form .btn{width:100%}
-  .gate-note{font-size:.82rem;color:var(--paper-faint);margin-top:12px}
-  .gate-success{
-    display:none;align-items:center;gap:12px;text-align:left;
-    background:rgba(71,168,109,.16);border:2px solid var(--leaf);
-    border-radius:var(--radius);padding:16px 20px;
-    font-family:'Baloo 2',sans-serif;font-weight:600;
+
+  .paywall{text-align:center;padding:22px 4px 0}
+  .cliffhanger{
+    font-family:'Borel',cursive;font-size:1.3rem;color:var(--sky);margin-bottom:6px;
   }
+  .paywall-copy{font-size:.96rem;color:var(--paper-dim);margin-bottom:20px}
+  .paywall-copy strong{color:var(--paper)}
+  .plan-cards{display:flex;flex-direction:column;gap:14px;max-width:360px;margin:0 auto}
+  .plan-card{
+    background:rgba(255,246,233,.06);border:2px solid rgba(255,246,233,.18);
+    border-radius:20px;padding:20px 18px;text-align:left;position:relative;
+  }
+  .plan-card-featured{background:rgba(255,182,39,.1);border-color:var(--sun)}
+  .plan-badge{
+    position:absolute;top:-12px;left:18px;background:var(--sun);color:var(--ink);
+    font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.03em;
+    text-transform:uppercase;padding:4px 12px;border-radius:999px;
+  }
+  .plan-name{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:6px}
+  .plan-price{display:flex;align-items:baseline;gap:8px;margin-bottom:2px}
+  .plan-price .amt{font-family:'Baloo 2',sans-serif;font-weight:800;font-size:1.7rem;color:var(--sun)}
+  .plan-price .period{font-size:.82rem;color:var(--paper-faint)}
+  .plan-then{font-size:.82rem;color:var(--paper-dim);margin-bottom:14px}
+  .plan-features{list-style:none;margin-bottom:18px}
+  .plan-features li{
+    font-size:.86rem;color:var(--paper-dim);padding-left:22px;position:relative;margin-bottom:7px;
+  }
+  .plan-features li::before{
+    content:'✓';position:absolute;left:0;color:var(--leaf);font-weight:700;
+  }
+  .btn-plan{width:100%}
+  .paywall-note{font-size:.78rem;color:var(--paper-faint);margin-top:16px}
 
   /* ---------- sections (mobile: single column, tighter padding) ---------- */
   section{padding:64px 0;position:relative}
@@ -290,12 +318,6 @@
   /* =========================================================
      PROGRESSIVE ENHANCEMENT — larger phones / small tablets
      ========================================================= */
-  @media (min-width:400px){
-    .gate-form{flex-direction:row;flex-wrap:wrap}
-    .gate-form .text-input{flex:1;min-width:200px;width:auto}
-    .gate-form .btn{flex-shrink:0;width:auto}
-  }
-
   @media (min-width:600px){
     .wrap{padding:0 24px}
     .wordmark{font-size:1.7rem}
@@ -397,9 +419,9 @@
           First day of school. A new baby at home. Monsters under the bed.
           Tell us what's on your child's mind, and get a personalized bedtime
           story, starring them, where being scared and being brave happen
-          at the same time. Your first story is free.
+          at the same time. Chapter one is always free to read.
         </p>
-        <a class="btn" href="#builder">Create your child's free story</a>
+        <a class="btn" href="#builder">Start your child's story</a>
         <div class="hero-proof">
           <span class="proof-item">
             <svg width="18" height="18" viewBox="0 0 100 100"><use href="#d-star"/></svg>
@@ -489,21 +511,33 @@
           <div class="storybook">
             <svg class="corner-doodle" width="46" height="46" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-star"/></svg>
             <h3 data-title></h3>
-            <p data-excerpt></p>
+            <div class="excerpt-scroll">
+              <p data-excerpt></p>
+            </div>
             <p class="page-note" data-pagenote></p>
           </div>
-          <div class="gate">
-            <p data-gatecopy><strong>Where should we send the full story?</strong></p>
-            <form class="gate-form" data-gate>
-              <input class="text-input" type="email" placeholder="Your email" aria-label="Your email" inputmode="email" autocomplete="email" enterkeyhint="send" required>
-              <button class="btn" type="submit">Send my free story</button>
-            </form>
-            <p class="gate-note">Free, in your inbox before bedtime. No spam, no card.</p>
-            <div class="gate-success" role="status">
-              <svg width="30" height="30" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-star"/></svg>
-              <span data-successcopy>It's on its way. Check your inbox tonight.</span>
+
+          <div class="paywall">
+            <p class="cliffhanger">To be continued&hellip;</p>
+            <p class="paywall-copy" data-paywallcopy>Want to find out what happens next?</p>
+
+            <div class="plan-cards">
+              <div class="plan-card plan-card-featured">
+                <div class="plan-badge">7 days free</div>
+                <div class="plan-name">Brave Anyway</div>
+                <div class="plan-price"><span class="amt">Free</span><span class="period">for 7 days</span></div>
+                <div class="plan-then">then $12.99/month</div>
+                <ul class="plan-features">
+                  <li>Unlimited stories, unlimited kids</li>
+                  <li>A new chapter every night</li>
+                  <li>Cancel anytime</li>
+                </ul>
+                <button class="btn btn-plan" onclick="subscribeToPlan()">Start my free trial</button>
+              </div>
             </div>
+            <p class="paywall-note">Secure checkout. Cancel anytime before your trial ends and you won't be charged.</p>
           </div>
+
           <div class="builder-nav">
             <button class="back-link" data-restart>← Create another story</button>
             <span></span>
@@ -637,7 +671,7 @@
       <svg class="doodle" style="bottom:12%;right:6%;animation-delay:3.5s" width="64" height="64" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-cloud"/></svg>
       <h2><span class="script">scared and brave,</span>at the very same time.</h2>
       <p>It takes less than a minute, and the first one's on us. See the look on their face when the hero has their name.</p>
-      <a class="btn" href="#builder">Create your child's free story</a>
+      <a class="btn" href="#builder">Start your child's story</a>
     </div>
   </section>
 </div>
@@ -662,7 +696,7 @@
       </details>
       <details>
         <summary>How much does it cost?</summary>
-        <p>Your first story is completely free, no card required. After that, your first month is $14.99, then $19.99/month, and you can cancel anytime. Prefer to pay once a year? The annual plan is $99, about $8.25/month.</p>
+        <p>Chapter one of any story is always free to read, no card needed. After that, try Brave Anyway free for 7 days, then it's $12.99/month for unlimited stories and unlimited kids. Cancel anytime.</p>
       </details>
     </div>
   </section>
@@ -677,11 +711,17 @@
 
 <script>
   // ---- CONCIERGE MVP: paste your Zapier "Catch Hook" or Make "Custom
-  // webhook" URL below. Every free-story email submission will POST the
-  // parent's email plus the story details here, so your automation can
-  // send the real story email (Phase 0: reviewed by hand) followed by
-  // the Stripe Payment Link email. Leave blank to keep it fully demo/local.
+  // webhook" URL below. Every time a parent clicks Subscribe, this POSTs
+  // their chosen plan plus the story details here, so you know a lead is
+  // about to pay before Stripe's webhook confirms it. Leave blank to keep
+  // it fully demo/local.
   const WEBHOOK_URL = ''; // e.g. 'https://hooks.zapier.com/hooks/catch/xxxxx/xxxxx/'
+
+  // ---- Paste your Stripe Payment Link URL here once created. Set up the
+  // Payment Link with a 7-day free trial (Stripe supports this natively,
+  // no coupon needed) on a $12.99/month recurring price. Leave blank to
+  // keep the Subscribe button in demo mode.
+  const PAYMENT_LINK = 'https://buy.stripe.com/28E7sM4gybIjaWp77p4F200';
 
   const state = { name:'', hero:'', age:'', fav:'', favCustom:'', situation:'' };
 
@@ -702,34 +742,62 @@
     mermaids:'a mermaid\u2019s lucky pearl'
   };
 
+  // Flavor packs: small, reusable turns of phrase tied to what the kid
+  // loves, so more than just the sidekick's name changes between a
+  // dinosaur-lover's story and a space-lover's story.
+  const flavors = {
+    dinosaurs:{breath:'triceratops breath',brave:'braced like a triceratops holding its ground',cozy:'snug as a dinosaur egg tucked deep in warm sand',exclaim:'Roar-worthy',expert:'paleontologist'},
+    space:{breath:'rocket-launch breath',brave:'counted down silently like a rocket right before liftoff',cozy:'snug as an astronaut zipped into a sleeping pod',exclaim:'Out of this world',expert:'astronaut'},
+    princesses:{breath:'royal breath',brave:'stood as tall as royalty walking into a throne room',cozy:'snug as a princess wrapped in a velvet cloak',exclaim:'Fit for a crown',expert:'princess'},
+    animals:{breath:'fox breath',brave:'steadied like a fox right before a leap',cozy:'snug as a fox curled up in its den',exclaim:'Wild and wonderful',expert:'explorer'},
+    soccer:{breath:'penalty-kick breath',brave:'planted both feet like a striker lining up the winning shot',cozy:'snug as a favorite jersey fresh out of the dryer',exclaim:'Goal-worthy',expert:'captain'},
+    superheroes:{breath:'superhero breath',brave:'stood the way superheroes stand right before leaping off a rooftop',cozy:'snug as a cape wrapped around twice for good measure',exclaim:'Superhero-level',expert:'superhero'},
+    mermaids:{breath:'mermaid breath',brave:'steadied like a mermaid diving into a new current',cozy:'snug as a mermaid tucked into a shell-shaped bed',exclaim:'Deep-sea worthy',expert:'mermaid'}
+  };
+  const defaultFlavor = {breath:'dragon-breath',brave:'braced like a knight lifting a shield',cozy:'snug as a dragon curled around its favorite treasure',exclaim:'Legendary',expert:'knight'};
+
+  function getFlavor(){
+    if(state.fav === 'custom' && state.favCustom){
+      const c = state.favCustom.toLowerCase();
+      return {
+        breath:`${c} breath`,
+        brave:`thought of ${c} for one second and stood a little taller`,
+        cozy:`snug as anything having to do with ${c}`,
+        exclaim:'Absolutely',
+        expert:'expert'
+      };
+    }
+    return flavors[state.fav] || defaultFlavor;
+  }
+
   const stories = {
-    dark:(n,p,s)=>({
+    dark:(n,p,s,f)=>({
       title:`${n} and the Night Patrol`,
-      text:`${n} knew the shadows in ${p.poss} room were just shadows. But knowing and feeling are two different things, even for the captain of the Night Patrol. Tonight, flashlight in one hand and ${s} at ${p.poss} side, ${p.sub} would meet the dark and ask it, politely, what it was so busy hiding…`
+      text:`${n} knew, in the smart, sensible part of ${p.poss} brain, that the shadows in ${p.poss} room were just shadows: a coat pretending to be a monster, a shelf pretending to be a dragon's tail, a pile of laundry pretending, rather unconvincingly, to be a crouching wolf. Knowing that didn't stop ${p.poss} tummy from doing its nervous flip-flop every single night the lights went out. That's the strange thing about being captain of the Night Patrol, ${p.sub} thought: you can know something isn't scary and still feel scared, and somehow both of those get to be completely true at exactly the same time.\n\nThe Night Patrol was not an official club, exactly, though ${n} thought it probably should be. It had exactly two members: ${n}, and ${s}, who had been sworn in one particularly nervous Tuesday and had taken the job very seriously ever since. Membership required one flashlight, kept charged and ready on the nightstand; one official uniform, which was really just pajamas, but official-feeling ones; and a great deal of patience for listening to a house settle down for the night, one creak at a time.\n\nTonight the house was being especially talkative. There was the usual creak by the stairs, the one that always sounded like somebody's knee. There was the low hum of the refrigerator two floors down, faithfully doing its job. There was the wind, rattling the window like it was checking whether the latch still held, the way it did every single night, and every single night it found the latch exactly where it left it, and yet it always checked again, just to be sure. ${n} had heard every one of these sounds roughly four thousand times. They still made the little hairs on ${p.poss} arms stand up like tiny soldiers.\n\n${p.Sub} sat up in bed, ${f.cozy} under the blankets, with the flashlight gripped tight in one hand and ${s} tucked snugly under the other arm, listening the way a captain listens: carefully, seriously, waiting to see if tonight was the night something was actually different.\n\n"You don't have to be brave all by yourself, you know," ${s} said, in the particular way sidekicks have of saying important things without making a big fuss about it. "That's sort of the whole point of having a Night Patrol. It's a two-person job."\n\n"What if there's really something there tonight?" ${n} whispered.\n\n"Then we'll find out together," said ${s}. "Which is a much better plan than finding out alone, and also a much better plan than never finding out at all and just lying here wondering forever."\n\n${n} considered this very seriously. It was, ${p.sub} had to admit, an excellent point. Wondering forever did sound worse than just checking, when you put it that way, though it didn't make the checking part feel any less enormous.\n\n"Being scared and being brave can happen at the exact same time," ${s} added, a little more gently now. "That's not a secret rule. That's just how it actually works, for everybody, even grown-ups, even the ones who pretend they're never scared of anything."\n\n"Why do shadows even look like that?" ${n} asked. "All stretched out and moving?"\n\n"That's just light doing its job, actually," ${s} said, in the tone of someone who found this genuinely fascinating rather than boring. "Light travels in straight lines, so when it hits something solid, like your desk or your very unthreatening coat, it can't bend around it. The dark shape left behind is just the light being blocked, that's all a shadow ever is. Nothing sneaky about it, just simple physics standing in the corner."\n\n"It doesn't feel like simple physics," ${n} said.\n\n"No," agreed ${s}. "Feelings and facts don't always show up holding hands. Here's a trick real Night Patrol captains use, though: name three things in the room you know for certain, out loud, before you even reach for the flashlight. It tells your brain the room is the same room it always is, just dimmer."\n\n"Desk. Bookshelf. Pile of laundry pretending to be a wolf," ${n} whispered, and felt, very slightly, the flip-flop in ${p.poss} tummy loosen its grip, just a little.\n\n${n} thought about ${p.poss} own grown-ups, and whether they still felt the flip-flop tummy feeling sometimes too, in their own grown-up dark. It seemed possible. It seemed, actually, kind of likely.\n\nSlowly, the way a very serious captain moves toward the edge of a very serious ship, ${p.sub} swung ${p.poss} feet out from under the warm nest of blankets and set them down on the floor, which was cooler than expected, the way floors always are at exactly this hour. ${p.Sub} ${f.brave}. The dark kingdom that lived at the edges of the room, past the reach of the nightlight's small glow, was waiting the way it always waited: patiently, quietly, endlessly curious about visitors, the same way it had waited every single night ${n} had ever slept in this room, and never once actually done anything except wait.\n\n${p.Sub} stood. The floorboards did their own small creak, joining in with the rest of the house's nighttime chorus. Somewhere down the hall, a door settled in its frame. ${n} took one step, then another, flashlight held out in front like a small, determined lighthouse beam cutting through fog.\n\n${p.Sub} swept the light slowly across the bookshelf, where the coat that pretended to be a monster hung exactly where it always hung, looking, in the light, extremely coat-shaped and not remotely monster-shaped at all. ${p.Sub} swept it across the desk, the chair, the pile of stuffed animals that had migrated, as they always did, from the bed to the floor sometime in the last week.\n\nThen ${p.Sub} swept it toward the corner by the window, the one corner of the room the flashlight beam hadn't quite reached yet, the one corner where the shadows pooled thickest and darkest, the way shadows always seem to save up all their best hiding spots for exactly one place.\n\nAnd something there, something with a very particular shape, shifted. Just slightly. Just enough. Like it had been caught in the middle of something, and hadn't quite finished deciding what to do about being caught.\n\n${n} froze, flashlight beam trembling just the tiniest bit in ${p.poss} hand. ${s} went very still under ${p.poss} arm, listening hard.\n\nWas it possible, ${n} wondered, heart thudding in a way that felt both terrified and, somehow, the tiniest bit thrilled, that whatever lived in the corner of the dark kingdom had been waiting for exactly this moment, this visit, this captain, all along?`
     }),
-    school:(n,p,s)=>({
+    school:(n,p,s,f)=>({
       title:`${n} and the Brand-New Castle`,
-      text:`Tomorrow, ${n} would walk through the gates of a brand-new castle called school. ${p.Poss} tummy was doing little flips, the very same flips explorers feel right before they discover something wonderful. So ${p.sub} packed the essentials: one brave smile, one favorite snack, and ${s}, just in case…`
+      text:`Tomorrow, ${n} would walk through the tall iron gates of a brand-new castle called school, and there was no getting around it: ${p.poss} tummy had been doing little flip-flops about it all week long, the same fluttery feeling that explorers get right before they discover something enormous and wonderful and just the tiniest bit terrifying, all at exactly the same time.\n\nThe castle had been visible from the car window for weeks now, ever since the drive to pick out school shoes. It sat at the top of a small hill, with tall windows and a flag that snapped in the wind, and every time they passed it ${p.poss} grown-up would say, in a voice that was trying very hard to sound purely excited and not even a little bit nervous itself, "That's your new school!" ${n} always nodded, and looked, and felt the flip-flop start up right on cue.\n\nTonight, the night before, ${p.sub} had laid out the essentials on the end of the bed with the seriousness of a ${f.expert} preparing for something that could not be postponed. There was one favorite shirt, chosen for its exact perfect softness. There was one lucky pair of socks, striped, that had done a good job on every important day so far this year. And there was, tucked carefully into the front pocket of a brand-new backpack that still smelled like the inside of a store, ${s}, who had promised, solemnly, to ride along the whole first day for moral support.\n\n"Castles are big," ${s} said, from the pocket, peering out at the folded shirt and matching socks. "But so are you. In all the ways that actually count, which, if you ask me, is most of them."\n\n${n} wasn't so sure. What if the castle had a hundred hallways, all identical, all twisting off in directions that made no sense, and ${p.sub} got lost in every single one of them, forever, or at least until lunchtime? What if the other kids had already found each other weeks ago, in some kind of secret kid meeting ${n} hadn't been invited to, and had already picked their favorite spots at the lunch tables and their favorite partners for every game, without leaving so much as one small gate open for somebody new to slip through?\n\n${p.Sub} pulled the blanket up to ${p.poss} chin and stared at the ceiling, where the glow-in-the-dark stars, stuck there years ago by a much smaller version of ${n}, had gone soft and sleepy with the last of their light.\n\n"Here's a secret," ${s} whispered, climbing up out of the backpack pocket to sit on the pillow instead. "Every single kid walking through those castle gates tomorrow morning is going to have that exact same flip-flop feeling in their tummy. Every one. Even the ones who look like they don't. Especially the ones who look like they don't, actually."\n\n"How do you know that?" ${n} asked.\n\n"Because I've been to a lot of first days," said ${s}, matter-of-factly. "It's kind of my specialty."\n\n"Okay, specialist," ${n} said. "So what do I actually do? Once I'm through the gates?"\n\n${s} thought about this properly, the way ${s} thought about things that actually mattered. "Here's the real trick, and it works better than waiting around for someone else to say hello first: find one kid, just one, who looks like they might also be feeling a little flip-floppy, and ask them one small question. Their name. Whether they like the same lunch food as you. Doesn't matter what. Starting is the whole hard part; after that, most conversations sort of drive themselves."\n\n"What if they say no thank you?" ${n} asked.\n\n"Then you ask a different kid two minutes later," ${s} said, entirely unbothered. "One no thank you isn't a verdict on the whole day. It's just one no thank you."\n\nThat helped, a little. ${n} closed ${p.poss} eyes and tried to picture the castle gates in the morning light instead of the dark, imagining them tall and a little bit gold at the edges, the way important doorways always seem to glow when you're finally standing right in front of them instead of just driving past. Somewhere on the other side of those gates, ${p.poss} brand-new desk was waiting in a brand-new classroom, empty for now, with ${p.poss} name maybe already printed in careful letters on a little paper tag, waiting for someone to come along and fill up the chair.\n\n${p.Sub} thought about the hallway, and the hundred doors, and the lunch tables with their invisible, already-claimed spots. ${p.Sub} thought about ${s}, riding along in the backpack pocket, ready with a whispered secret the second things got too flip-floppy to handle alone.\n\nThe question, ${n} decided, wasn't really whether the flip-flop feeling would show up tomorrow. It clearly would; it was already rehearsing. The real question was what ${p.sub} would find the very moment ${p.sub} actually stepped through those gates, backpack on, socks lucky, shirt soft, and whether the castle, once ${p.sub} was finally standing inside it instead of just imagining it from the outside, would turn out to be even the smallest bit friendlier than it looked from all the way out here in the dark, on the very last night of not-yet-a-school-kid.\n\n"Can I ask you something?" ${n} said into the dark.\n\n"Always," said ${s}.\n\n"Were you scared, the first time you ever did something brand new?"\n\n${s} was quiet for a second, which almost never happened. "Every single time," ${s} admitted finally. "I don't think that part ever really goes away, no matter how many brand-new things you end up doing. You just get a little better at doing them anyway, scared or not."\n\n${n} rolled over onto ${p.poss} side, ${f.cozy}, facing the window where a thin line of streetlight slipped in through the gap in the curtains. Somewhere out there, in houses ${p.sub} had never seen, other kids were probably lying in their own beds right now, staring at their own ceilings, feeling their own versions of the exact same flip-flop.\n\n"Get some sleep," ${s} said softly. "Tomorrow's going to need you well rested, whatever happens."\n\n${n} closed ${p.poss} eyes, and for the first time all evening, the flip-flop feeling settled, just slightly, into something almost like anticipation, the two feelings sitting right next to each other, the way ${s} always said they were allowed to.`
     }),
-    sibling:(n,p,s)=>({
+    sibling:(n,p,s,f)=>({
       title:`${n}, the Greatest ${p.sib.charAt(0).toUpperCase()+p.sib.slice(1)}`,
-      text:`There was a brand-new tiny person in ${n}'s house, and everyone kept saying how small the baby was. But nobody had noticed the most important thing: every legendary ${p.sib} starts out exactly like ${n}, wondering if there's still enough love to go around. (There is. There always is. Even ${s} knew that.)`
+      text:`There was a brand-new, extremely tiny person living in ${n}'s house now, and every single grown-up who came to visit kept saying the exact same thing, in the exact same delighted voice, as if nobody had ever said it before: "Oh, look how small the baby is!" ${n} had heard some version of that sentence approximately one thousand times by now, ${p.sub} was fairly sure, and ${p.sub} was starting to notice something else too: nobody was saying anything at all about how big ${p.sub} had gotten, which felt like a strange and slightly hollow thing to leave out, especially on a week when everything else in the house seemed to be about the baby, the baby, the baby.\n\nThe nursery used to be the guest room, the one with the fold-out couch where visiting grandparents used to sleep, and now it had a crib in it, and a rocking chair, and a mobile that spun slowly overhead playing a tune ${n} secretly still liked more than ${p.sub} would ever admit out loud. ${p.Sub} sat cross-legged on the soft rug, ${f.cozy}, watching the baby sleep in that particular baby way that seemed to require absolutely no effort at all, all squished-up fists and slow, even breathing, while ${s} sat propped in ${p.poss} lap, looking unusually thoughtful for once.\n\n"You know," ${s} said eventually, "nobody ever mentions the most important thing about being a ${p.sib}."\n\n"What's that?" ${n} asked, not looking away from the crib.\n\n"Every single legendary ${p.sib} in the whole entire history of ${p.sib}s started out exactly like you're starting out right now. Wondering, somewhere down deep, if there's enough love left over once the new baby takes their share." ${s} said this very matter-of-factly, the way sidekicks tend to say the truest things, without any big dramatic buildup at all.\n\n${n} hadn't said that particular worry out loud to anyone. Not to Mom, not to Dad, not even at bedtime, when most of the worries usually came tumbling out on their own, one after another, once the lights went off and it felt safer to say things. But somehow ${s} had known it was there anyway, tucked way down under all the other feelings, like a small stone at the bottom of a pocket.\n\n"Is there?" ${n} asked quietly. "Enough, I mean. Enough love, once you count the baby too."\n\n${s} didn't answer right away, which ${n} appreciated, actually, because it meant ${s} was taking the question seriously instead of just saying something quick and comforting to make the worry go away.\n\nThink about it this way, ${s} said instead. Think about your favorite song. When you learn a new favorite song, does the old one stop being good? Does loving the new one use up all the love you had left over for the old one?\n\n${n} considered this very carefully. It didn't, ${p.sub} had to admit. ${p.sub} still loved every single one of ${p.poss} old favorite songs exactly as much as before, even after finding new ones. Somehow there was always room for one more favorite, without any of the old favorites getting smaller to make space.\n\n"Love's a bit like that," ${s} said. "It doesn't work like a pie, where every new slice makes the other slices smaller. It's more like, I don't know, a really good campfire. You can always add more wood."\n\n"Is that why she sleeps so much?" ${n} asked, watching the baby's chest rise and fall in its slow, effortless rhythm. "She's basically always asleep."\n\n"Pretty much," said ${s}. "A brand-new baby's brain is doing an enormous amount of building work, sorting out how to see properly, how to recognize voices, all of it, and building work like that takes a huge amount of energy. Sleeping is actually the job, for a baby. It's not laziness. It's construction."\n\n${n} looked at the baby a little differently after that, less like competition and more like someone doing very important, very tiring work.\n\nDown the hall, the baby made a small, sleepy snuffling sound, and somewhere closer, footsteps were coming up the hallway, the familiar creak of the third stair from the top, the one that always gave away exactly who was on their way, before you even saw them. ${n} knew that creak. It meant Mom, most likely, coming to check on the baby, or maybe coming to check on ${n} instead, or maybe, possibly, coming to check on both at once, the way grown-ups sometimes managed to do, somehow, without anyone having to pick.\n\n${n} sat very still, ${s} tucked warm against ${p.poss} chest, listening to the footsteps get closer, watching the strip of hallway light under the door grow brighter as whoever it was got nearer, waiting to find out exactly what kind of answer was about to walk through that door, and whether it would be the kind of answer that made the small worried stone in ${p.poss} pocket feel any lighter at all.\n\nThe door creaked open, slow and careful, the way doors always creak open when someone's checking to see if you're asleep before deciding whether to come all the way in.\n\n"Still awake in here?" Mom whispered, poking her head around the frame, and ${n} could see, even in the dim nightlight glow, that she looked tired in the particular way new-baby weeks made everyone in the house look tired, but also that she'd come to check on ${n} specifically, not just to peek in on the baby down the hall on her way past.\n\n"Couldn't sleep," ${n} admitted.\n\n"Me neither, really," Mom said, coming all the way in now and settling onto the edge of the bed, the mattress dipping under her weight the way it always had, for every single one of ${n}'s bedtimes for as long as ${p.sub} could remember. "Big week. Big feelings. Want to tell me what's keeping you up?"\n\n${n} looked at ${s}, who gave the smallest possible nod, the kind of nod that meant go ahead, it's safe, say the actual thing.\n\n"Is there still enough love," ${n} asked slowly, "now that there's two of us?"\n\nMom didn't laugh, or rush to answer too quickly, which ${n} appreciated more than ${p.sub} could have explained. She just sat with the question for a second, the way ${s} always did, like it deserved a real answer instead of a fast one. ${p.Sub} ${f.brave}, and waited.`
     }),
-    sleep:(n,p,s)=>({
+    sleep:(n,p,s,f)=>({
       title:`Captain ${n}'s First Voyage`,
-      text:`${n}'s bed was not just a bed. It was a ship, and tonight was ${p.poss} very first solo voyage. The crew stood ready: one worn-out rabbit, recently promoted to first mate, and ${s}, officially in charge of snacks. The captain was almost ready too. Almost counts for a lot, on first voyages…`
+      text:`${n}'s bed was not, strictly speaking, just a bed. Tonight, it was a ship, a very serious and seaworthy one, freshly commissioned for exactly one very important purpose, and tonight was ${p.poss} very first solo voyage: the first whole night ${p.sub} would sail without a grown-up anchored in the room, without the hallway light left on, without anyone but the crew to see the voyage through until morning.\n\nThe crew had been assembled with great care over the course of the afternoon. There was one extremely worn-out rabbit, missing one ear button and most of its original fluff, recently and very deservedly promoted to First Mate after years of loyal service. There was a small stack of favorite books, positioned within easy reach in case of emergency reading needs. And there was ${s}, officially appointed to the vital roles of snack officer, night-light monitor, and general morale department, all at once, because on a ship this size, everyone had to wear several hats.\n\n"Reporting for duty," ${s} announced, saluting smartly from the pillow beside ${p.poss} head. "Captain, I should mention, on behalf of the crew, that we are all feeling a little nervous about tonight."\n\n"Me too," admitted ${n}, pulling the blankets up around ${p.poss} shoulders like a sail catching the first bit of evening wind, ${f.cozy}. It was one thing to want to be a big kid, the kind of kid who slept in ${p.poss} own room, in ${p.poss} own bed, the whole entire night through, without anybody checking in every hour. It was a completely different thing to actually lie here, in the dark, with the door only halfway open and a thin stripe of hallway light falling across the floor, and feel the whole enormous house creaking and settling around ${p.poss} small, brave ship like some enormous, breathing, nighttime creature.\n\n"That's allowed," said ${s}, settling into a more comfortable position on the pillow. "Even captains get nervous before a first voyage. Especially captains, actually, since they're the ones who have to make all the decisions once the ship leaves the harbor. It doesn't mean you're not ready. It just means it's your first time, and first times are supposed to feel exactly like this: a little bit exciting, a little bit enormous, and a little bit like your tummy is doing loops."\n\n${n} thought about that for a while, staring up at the ceiling where the familiar cracks in the paint had arranged themselves, as always, into shapes that were almost recognizable if you squinted just right. Down the hall, ${p.poss} grown-up's voice drifted through the wall, soft and muffled, saying goodnight to the rest of the house the way ${p.sub} always did: a click of the kitchen light, a check of the front door lock, the particular creak of the hallway floorboard right outside ${p.poss} own door.\n\nThen the hallway light clicked off.\n\nThe ship, ${p.poss} bed, ${p.poss} whole room, rocked very gently in the sudden deeper dark, the way ships do the moment they actually leave the safety of the harbor and feel open water for the first time. First Mate Rabbit sat at attention by the pillow. ${s} kept watch from the other side. And the captain, ${n}, lay very still in the middle of it all, waiting to see whether tonight would be the night ${p.sub} rang the bell for help, the way ${p.sub} had every single night before this one, or whether tonight would be the night ${p.sub} steered forward alone, all the way to morning, into the very first real night of the very first real voyage.\n\n"You don't have to decide right now," ${s} said quietly, sensing the enormous, quiet weight of the decision sitting in the dark beside them. "You can just lie here for a minute and see how it feels. Actually, here's a proper ship's technique, if it helps: name three things you can hear right now, just to yourself. Real captains do this before every big decision."\n\n${n} listened. "The furnace. The clock. The wind on the shutter."\n\n"Good," said ${s}. "Now two things you can feel."\n\n"The blanket. My pillow."\n\n"See? Your whole ship is exactly where it's supposed to be. Nothing's changed except the deciding part."\n\n${n} took a breath, ${f.breath}, the kind that fills up your whole chest and then some, and let it back out slowly, listening to the house settle further into its nighttime hum: the furnace clicking on somewhere below, the particular tick of the hallway clock, the wind finding the one loose shutter it always found, this time of year, and giving it a small, testing rattle.\n\nNone of it was new. ${p.sub} had heard every one of these sounds a hundred times before, tucked safely between two grown-ups checking in every twenty minutes. The only thing that was actually different tonight was that this time, ${p.sub} was the one deciding whether to ring the bell, or whether, for the first time in the whole history of this particular ship, to simply let the voyage continue.\n\nSomewhere out past the porthole window, past the curtain ${p.sub} could just barely see around, the very first real star of the whole night blinked slowly into view, small and steady and patient, exactly like it was waiting, along with everyone else, to see what the captain would decide.`
     }),
-    moving:(n,p,s)=>({
+    moving:(n,p,s,f)=>({
       title:`${n} and the House That Waited`,
-      text:`Somewhere across town, an empty house was waiting, and it was a little nervous. Houses always are, before they meet their new kid. It didn't know yet about ${n}, or about ${s}, or how quickly a strange place becomes home once the right person hangs up their coat…`
+      text:`Somewhere across town, in a neighborhood ${n} had never even driven through, an empty house was waiting. It didn't know yet that its waiting was almost over. Houses always get a little nervous right before they meet their new kid, the same fluttery nervous that new kids get right before they meet their new house, which is a funny sort of coincidence that nobody ever quite gets around to mentioning, even though it would probably make everyone feel a little better if they did.\n\n${n} sat cross-legged on the floor of the old bedroom, the only bedroom ${p.sub} had ever really known, the one with the slightly faded wallpaper and the corner where the afternoon sun always landed just right around this time of day, warm on the carpet in a long yellow stripe. Except today the room looked different. Half of it had disappeared into boxes: the bookshelf, the toy bin, most of the closet, all of it folded up into cardboard rectangles stacked taller than ${p.sub} was, each one labeled in ${p.poss} grown-up's careful handwriting. What used to be a whole entire room, full of a whole entire life, was slowly turning into a pile of boxes waiting by the front door.\n\n${s} perched on top of the nearest box, looking unusually serious for once, which was saying something, since ${s} took most things fairly seriously to begin with.\n\n"It's a lot of boxes," ${s} said.\n\n"It's a lot of everything," ${n} said back, and meant it. The room ${p.sub} had slept in for as long as ${p.sub} could really remember, the room with exactly the right creak in exactly the right floorboard, the room where the doorway had little pencil marks showing how tall ${p.sub} used to be, was slowly disappearing into cardboard and packing tape, and somewhere underneath all of it ${p.sub} could feel a feeling that didn't have a very good name yet. Not quite sad, exactly. Not quite excited either, even though there was a new room waiting, and a new yard, and, according to ${p.poss} grown-ups, a really excellent tree for climbing. It was something in between, the way the sky sometimes looks when it can't quite decide between a storm and a sunny afternoon, gray and bright at the very same time.\n\n"The new house doesn't know about your wallpaper yet," ${s} offered gently. "Or your favorite hiding spot behind the curtains. Or the very specific way you like your door left open exactly three inches at night, no more, no less."\n\n"It doesn't know anything about me," ${n} said, and there was something almost lonely in saying it out loud like that.\n\n"Not yet," said ${s}. "But houses learn fast, if you give them half a chance. It's mostly a matter of who unpacks first, if you ask me: the boxes, or the bravery."\n\n${n} looked around the half-empty room one more time, at the pencil marks on the doorframe that wouldn't be coming along, at the long yellow stripe of afternoon sun landing in exactly the same spot it always landed, one last time, in this particular room, in this particular house. ${p.Sub} thought about the new room waiting across town, with its blank walls and its unfamiliar creaks and its whole entire unknown collection of afternoon sun stripes that hadn't introduced themselves yet.\n\n"What if I don't like it as much?" ${n} asked quietly.\n\n"What if you like it in a whole new way you haven't even discovered yet?" ${s} asked back. "New houses aren't really about liking things exactly the same amount. They're about finding all the new favorite spots that are just waiting to be found, the ones that don't exist anywhere else, because they're only in that one particular house."\n\n"How do you even start finding them?" ${n} asked.\n\n"Here's a trick that actually works," said ${s}. "The very first box you unpack, before any of the boring ones, should be the box with your favorite things in it: your favorite blanket, your favorite books, whatever makes a room feel like yours in about two minutes flat. Set those up first, on night one, before anything else. It won't be your whole old room. But it'll be enough of it to fall asleep in, and that's usually all you need for the first night."\n\n${n} turned this over for a while, the way ${p.sub} turned over most big thoughts, slowly, from a few different angles, before deciding what to think about them. ${f.exclaim}, ${p.sub} finally thought, and ${p.sub} ${f.brave}.\n\nOutside, right on schedule, a low rumble rolled up the street: the moving truck, pulling into the driveway exactly on time, its big engine humming low and patient, like it had all the patience in the world and would simply wait there until ${n} was ready. Through the window, ${n} could see the driver climbing down, clipboard in hand, ready to start loading up the boxes, the bookshelf, the toy bin, the whole cardboard version of ${p.poss} old life, and carry it all the way across town to meet the new house that had been waiting, quietly, nervously, patiently, this entire time.\n\n${n} looked at ${s}, and ${s} looked back, and neither of them said anything else for a moment, because some moments are big enough that you just have to sit inside them for a second before deciding what happens next.`
     }),
-    doctor:(n,p,s)=>({
+    doctor:(n,p,s,f)=>({
       title:`${n} the Fearless (Mostly)`,
-      text:`In the morning, ${n} had an appointment with Dr. Song, who kept stickers in her pocket and secrets in her stethoscope. Being a little nervous before the doctor is a rule of the universe, even knights follow it. So ${n} brought ${s}, took one deep dragon-breath, and decided to be nervous and brave at the very same time…`
+      text:`In the morning, ${n} had an appointment with Dr. Song, who kept a drawer full of stickers in her desk and, according to family legend, a whole universe of secrets tucked somewhere inside her stethoscope, though nobody had ever actually confirmed this. Being at least a little nervous before a doctor's visit was, as far as ${n} could tell, basically a rule of the universe, right up there with gravity and bedtime. Even knights got nervous before check-ups. Probably. ${p.Sub} had decided this, quite firmly, somewhere around breakfast, and was sticking to it for the rest of the day.\n\n"This is reason number one why I'm coming along today," ${s} said, tucked snugly under ${n}'s arm on the car ride over, watching the buildings slide by outside the window. "Moral support is basically my whole job description, and I take my job very seriously."\n\n"What if it hurts?" ${n} asked, still watching the buildings, the gas station, the little bakery with the striped awning, all of it sliding past in the particular blur that happens when you're thinking too hard to really look at anything.\n\n"What if it doesn't?" ${s} asked back. "What if it's just Dr. Song listening to your heart go thump-thump, and checking your ears, and measuring how tall you've gotten since last time, which, by the way, is probably a lot, because you've been growing like something out of a fairy tale lately?"\n\n${n} chewed on that for a second, turning it over. ${p.Sub} had been to Dr. Song's office plenty of times before, and most of the time, if ${p.sub} was being completely honest, it really was just listening and looking and one quick little pinch that was over before ${p.sub} even finished a full breath, followed immediately by a sticker and, occasionally, if it had been a particularly brave visit, two stickers. But knowing that from all the other times didn't make the nervous feeling disappear entirely this time. It just sat there quietly in ${p.poss} stomach, small and stubborn, waiting to see exactly what today would bring, the way nervous feelings tend to do regardless of how many times you've already proven them wrong.\n\n"Here's what I know for absolutely certain," said ${s}, as the car indicated and turned into the parking lot, gravel crunching softly under the tires. "Being nervous and being brave are allowed to happen at the very same time, in the very same kid, on the very same morning. You don't have to pick just one feeling and leave the other one behind in the car."\n\n${n} looked down at ${s}, and then out at the building, tall and beige and entirely unremarkable except for the fact that it contained, somewhere on the second floor, an appointment with ${p.poss} name on it.\n\n"What if I cry?" ${n} asked, very quietly, almost too quietly to hear over the sound of the engine turning off.\n\n"Then you cry," said ${s}, without a single hint of judgment in ${p.poss} voice. "Brave doesn't mean no tears. It just means you go in anyway, tears and all, if that's what happens. Some of the bravest knights in all of history cried buckets before big things. It's practically a job requirement."\n\n"Is there really a real trick for the nervous feeling?" ${n} asked. "Or do you just say that?"\n\n"There's a real one," said ${s}. "Breathe in slowly while you count to four. Hold it for four. Breathe out for four. It's called box breathing, and it's not made up, it actually slows your heart down for real, every single time, on purpose, not just as a distraction."\n\n${n} tried it once, right there in the car: in, two, three, four, hold, out. It didn't erase the nervous feeling completely. But it did seem to turn the volume down on it, just slightly, like someone had reached over and nudged a dial.\n\n"And for what it's worth," ${s} added, "that stethoscope isn't hiding secrets. It's just a really good pair of ears in a tube, so Dr. Song can hear your actual heartbeat clearly instead of guessing. That's the whole trick to it."\n\nThat helped, more than ${n} expected it to. ${p.sub} took one more deep ${f.breath}, box-shaped this time, four counts in, four counts held, four counts out, and let it back out slowly, watching it fog up the car window just slightly in the cool morning air.\n\nInside the building, past the sliding glass doors that ${n} could already see reflecting the parking lot, past the front desk with its little dish of lollipops, somewhere down a hallway ${p.sub} had walked down a dozen times before and yet somehow never quite gotten used to, Dr. Song was probably finishing up with whoever had the appointment right before ${n}'s, washing her hands, checking her clipboard, maybe even glancing at the clock to see how much time was left before the next name on her list.\n\n${n} reached for the car door handle, ${s} still tucked firmly against ${p.poss} side, and paused there for just a moment, ${p.sub} ${f.brave}; hand on the handle, breath held, the whole entire morning balanced right there in that one small pause before the door actually opened.\n\n"You know what the funny part is?" ${s} said, in the last few seconds before the pause ended. "You've done this exact thing before. Every single time. Walked in nervous, walked out with a sticker, and lived to tell about it. You're basically a ${f.expert} at this by now, even if it doesn't feel that way sitting here."\n\n${n} thought about that. It was true, actually, when ${p.sub} lined it all up: last year's visit, and the one before that, and the one before that, stretching back further than ${p.sub} could really remember clearly. Every single time, the nervous feeling had shown up right on schedule, and every single time, somehow, ${p.sub} had made it all the way through to the other side of the appointment, sticker in hand, nervous feeling already fading into something that felt almost silly to have worried about so much.\n\n"Doesn't make today less nervous, though," ${n} admitted.\n\n"Nope," agreed ${s} cheerfully. "Doesn't have to. You can be an expert at being nervous about doctor visits and still be nervous about this particular one. Those two things get to both be true, same as always."\n\n${n} finally pushed the car door open, morning air rushing in cool and a little damp, smelling like the parking lot and the bakery two doors down all at once. ${p.Sub} climbed out, ${s} clutched properly against ${p.poss} chest now, and looked up at the tall beige building one more time, at the second-floor windows where, somewhere behind one of them, Dr. Song was probably finishing up her last cup of coffee before the day's appointments really got going.`
     }),
-    adventure:(n,p,s)=>({
+    adventure:(n,p,s,f)=>({
       title:`${n} and the Door in the Wallpaper`,
-      text:`The door appeared at exactly bedtime, small, golden, and right where the wallpaper used to be. It had a note: "For ${n} only." Well. There are rules about mysterious golden doors, and rule number one is that you bring ${s} with you…`
+      text:`The door appeared at exactly bedtime, which ${n} would later think was a very considerate detail, all things considered, since it meant nobody had to rearrange their whole evening around it. It was small, and golden, and positioned precisely where the wallpaper used to be, right between the bookshelf and the window, in a spot ${p.sub} would have sworn on a stack of favorite books had been solid, boring, entirely-door-free wall just that very morning.\n\nTaped to the door, at exactly ${p.poss} eye level, as if whoever left it had known exactly how tall ${n} was, sat a small handwritten note: "For ${n} only."\n\n${p.Sub} looked at ${s}. ${s} looked back with an expression that suggested this was, in fact, extremely normal, and possibly even a little overdue.\n\n"There are rules about mysterious golden doors," ${s} said, hopping down from the shelf to stand beside it, examining the little brass hinges with real professional interest. "Rule number one is that you never go through one alone. Which is convenient, because I happen to be available this evening, and most evenings, generally speaking."\n\n"What's rule number two?" ${n} asked, reaching a hand toward the small brass handle, which was warm, somehow, like it had been sitting in a patch of sunlight all day even though the room had been dark and curtained for hours already.\n\n"Rule number two," said ${s}, "is that doors like this only ever appear for kids who are ready for exactly what's on the other side. Not kids who are never scared of anything, mind you. That would actually disqualify almost everyone. Kids who are a little scared, and go anyway. That's the actual requirement."\n\n${n} thought about that for a long moment, hand resting on the warm handle now, which hummed very faintly under ${p.poss} palm, like the door itself was holding its breath, waiting to see what would happen next. There was a rule number three, ${p.sub} suspected, that ${s} hadn't mentioned yet, the way there always seemed to be one more rule waiting just out of sight, but for now two rules seemed like enough to be getting on with.\n\n"Is it going to be scary?" ${n} asked. "On the other side?"\n\n"Probably a little," ${s} admitted, which ${n} appreciated, actually, since ${s} could have just said no and made everything sound easier than it was going to be. "Most good adventures are a little scary. That's usually how you know they're good ones, and not just, you know, regular Tuesdays wearing an adventure costume."\n\n${n} almost laughed at that, despite the nervous feeling doing its familiar flip-flop routine in ${p.poss} stomach. Somewhere behind the little golden door, ${p.sub} could hear something now, faint but unmistakable: a sound like wind moving through trees that definitely weren't growing anywhere inside this house, or maybe it was distant music, something with a rhythm ${n} almost recognized, or maybe, ${p.sub} thought, it was simply the exact sound a brand-new adventure makes right before it properly begins, a sound no one had ever quite described to ${p.sub} before because most people, ${n} suspected, didn't get the chance to actually stand here and listen to it.\n\n${p.Sub} looked back one more time at ${p.poss} own bed, cozy and familiar and exactly where ${p.sub} had left it that morning, blankets rumpled in the shape ${p.sub} always left them in, nightlight glowing its same steady glow it glowed every single ordinary night. And then ${p.sub} looked back at the golden door, warm under ${p.poss} hand, humming faintly, note still taped at exactly ${p.poss} eye level, waiting.\n\n${s} climbed up onto ${p.poss} shoulder, settling in for whatever came next, and ${n} took one long ${f.breath}, the kind that fills your whole chest right up to the very top, and curled ${p.poss} fingers properly around the small brass handle.\n\n"Last chance to back out," ${s} offered, not because ${s} actually wanted ${n} to back out, but because it seemed like the sort of thing a good sidekick was supposed to say before any proper adventure, the way knights always got offered one last chance to turn back before the real quest began, and always, without fail, said no thank you, and went ahead anyway.\n\n"I'm not backing out," ${n} said, and was a little surprised, honestly, at how steady ${p.poss} own voice sounded saying it, given how loudly ${p.poss} heart was currently thumping away underneath ${p.poss} pajama shirt.\n\n"${f.exclaim}," said ${s}, sounding pleased. "For the record, I would have gone through that door with you either way. But it's nice when the captain's decision matches the sidekick's expectations. Makes the whole partnership feel very official."\n\nThe humming under ${p.poss} palm grew just slightly stronger, as if the door could somehow tell a decision had been made, and was responding to it the way a held breath finally responds to being let out. Somewhere on the other side, the wind-that-wasn't-wind, the music-that-might-not-be-music, seemed to swell just the smallest bit, like an orchestra tuning up before the very first note of something enormous.`
     })
   };
 
@@ -818,53 +886,46 @@
     const s = (state.fav === 'custom' && state.favCustom)
       ? `a very loyal companion who loves ${state.favCustom.toLowerCase()} just as much as ${p.sub} does`
       : (sidekicks[state.fav] || 'a very loyal flashlight');
-    const st = stories[state.situation](n,p,s);
+    const f = getFlavor();
+    const st = stories[state.situation](n,p,s,f);
     document.querySelector('[data-title]').textContent = st.title;
     document.querySelector('[data-excerpt]').textContent = st.text;
     document.querySelector('[data-pagenote]').textContent =
-      `Page 1 of 7 · written for ${n}, age ${state.age}`;
-    document.querySelector('[data-gatecopy]').innerHTML =
-      `<strong>Where should we send ${n}'s full story?</strong>`;
-    document.querySelector('[data-successcopy]').textContent =
-      `${n}'s story is on its way. Check your inbox tonight.`;
+      `Chapter 1 of 7 · written for ${n}, age ${state.age}`;
+    document.querySelector('[data-paywallcopy]').innerHTML =
+      `Want to find out what happens next for <strong>${n}</strong>?`;
     document.querySelector('[data-blabel]').textContent = `${n.toLowerCase()}'s story`;
   }
 
-  document.querySelector('[data-gate]').addEventListener('submit', e=>{
-    e.preventDefault();
-    const email = e.target.querySelector('input[type="email"]').value.trim();
-
+  function subscribeToPlan(){
     if(WEBHOOK_URL){
       fetch(WEBHOOK_URL, {
         method:'POST',
         mode:'no-cors', // Zapier/Make webhooks don't need CORS read-back; we don't need the response
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
-          email: email,
+          plan: 'unlimited_trial',
           kid_name: state.name,
           hero: state.hero,
           age_band: state.age,
           favorite_thing: (state.fav === 'custom' && state.favCustom) ? state.favCustom : state.fav,
           situation: state.situation,
-          submitted_at: new Date().toISOString()
+          clicked_at: new Date().toISOString()
         })
       }).catch(err => console.error('Webhook submission failed:', err));
     }
 
-    e.target.style.display='none';
-    document.querySelector('.gate-note').style.display='none';
-    document.querySelector('[data-gatecopy]').style.display='none';
-    document.querySelector('.gate-success').style.display='flex';
-  });
+    if(PAYMENT_LINK){
+      window.location.href = PAYMENT_LINK;
+    } else {
+      alert('Demo mode: this would go to Stripe checkout for the 7-day free trial, then $12.99/month, unlimited kids and stories. Paste your Stripe Payment Link URL into PAYMENT_LINK to make this real.');
+    }
+  }
 
   document.querySelector('[data-restart]').addEventListener('click', ()=>{
     state.situation='';
     document.querySelectorAll('[data-pick="situation"] .chip').forEach(c=>c.classList.remove('active'));
     validate2();
-    document.querySelector('[data-gate]').style.display='flex';
-    document.querySelector('.gate-note').style.display='block';
-    document.querySelector('[data-gatecopy]').style.display='block';
-    document.querySelector('.gate-success').style.display='none';
     goStep(2);
     document.getElementById('builder').scrollIntoView({behavior:'smooth',block:'center'});
   });
