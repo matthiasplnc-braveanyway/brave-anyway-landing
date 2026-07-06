@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brave Anyway: The story your child needs tonight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Borel&family=Baloo+2:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#14204A;
+    --night-2:#1B2A5E;
+    --card:#22336E;
+    --edge:rgba(143,193,234,.22);
+    --sun:#FFB627;
+    --sun-deep:#F0A013;
+    --coral:#F4715F;
+    --sky:#8FC1EA;
+    --leaf:#47A86D;
+    --paper:#FFF6E9;
+    --paper-dim:rgba(255,246,233,.72);
+    --paper-faint:rgba(255,246,233,.45);
+    --ink:#1D2752;
+    --radius:22px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--night);
+    color:var(--paper);
+    font-family:'Montserrat',sans-serif;
+    font-size:16.5px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{font-family:'Baloo 2',sans-serif;font-weight:700;line-height:1.12}
+  .script{font-family:'Borel',cursive;font-weight:400}
+  a{color:inherit}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 18px}
+
+  /* ---------- doodles (mobile: hidden, desktop: shown + animated) ---------- */
+  .doodle{position:absolute;pointer-events:none;display:none;animation:bob 7s ease-in-out infinite}
+  @keyframes bob{
+    0%,100%{transform:translateY(0) rotate(-3deg)}
+    50%{transform:translateY(-14px) rotate(3deg)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .doodle{animation:none}
+    html{scroll-behavior:auto}
+  }
+
+  /* ---------- nav ---------- */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:24px 0}
+  .wordmark{
+    font-family:'Borel',cursive;font-size:1.7rem;color:var(--paper);
+    text-decoration:none;line-height:1;padding-top:10px;
+  }
+  .nav-cta{
+    font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.85rem;text-decoration:none;
+    color:var(--ink);background:var(--sun);
+    padding:9px 16px;border-radius:999px;transition:transform .15s,background .2s;
+    white-space:nowrap;
+  }
+  .nav-cta:hover{background:var(--sun-deep);transform:rotate(-2deg)}
+  .nav-right{display:flex;align-items:center;gap:10px}
+  .nav-login{
+    background:none;border:none;color:var(--paper-dim);cursor:pointer;
+    font-family:'Baloo 2',sans-serif;font-weight:600;font-size:.82rem;
+    padding:8px 2px;-webkit-tap-highlight-color:transparent;white-space:nowrap;
+  }
+  .nav-login:hover{color:var(--paper)}
+
+  /* ---------- ambient glow (sits behind the glass builder card) ---------- */
+  .glow{position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none;z-index:0;opacity:.55}
+  .glow-sun{width:280px;height:280px;background:var(--sun);top:-40px;right:8%}
+  .glow-coral{width:240px;height:240px;background:var(--coral);top:38%;left:-60px}
+  .glow-sky{width:260px;height:260px;background:var(--sky);bottom:-60px;right:20%}
+  @media (min-width:920px){.glow{opacity:.4}}
+  header>.wrap{position:relative;z-index:1}
+
+  /* ---------- hero (mobile: stacked single column) ---------- */
+  header{position:relative;padding:28px 0 70px}
+  .hero-grid{display:grid;grid-template-columns:1fr;gap:40px;align-items:start}
+  .hero-copy{padding-top:0;position:relative;z-index:1}
+  .eyebrow{
+    display:inline-block;font-family:'Baloo 2',sans-serif;font-weight:700;
+    font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--night);background:var(--sky);
+    padding:6px 16px;border-radius:999px;margin-bottom:22px;
+    transform:rotate(-1.5deg);
+  }
+  h1{font-size:clamp(2.5rem,4.6vw,3.8rem);margin-bottom:18px;font-weight:800}
+  h1 .script{color:var(--sun);font-size:.92em}
+  .hero-sub{font-size:1rem;color:var(--paper-dim);max-width:32rem;margin-bottom:30px}
+  .hero-proof{display:flex;gap:14px;flex-wrap:nowrap;margin-top:32px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+  .hero-proof::-webkit-scrollbar{display:none}
+  .proof-item{font-size:.76rem;color:var(--paper-faint);display:flex;align-items:center;gap:6px;flex-shrink:0;white-space:nowrap}
+  .proof-item svg{flex-shrink:0}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;min-height:48px;
+    background:var(--sun);color:var(--ink);
+    border:none;border-radius:999px;padding:14px 24px;
+    font-family:'Baloo 2',sans-serif;font-size:1.05rem;font-weight:700;
+    cursor:pointer;text-decoration:none;transition:transform .15s,background .2s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .btn:hover{background:var(--sun-deep);transform:rotate(-1.5deg) scale(1.02)}
+  .btn:active{transform:scale(.97)}
+  .btn:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+  .btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+  .btn-coral{background:var(--coral);color:var(--paper)}
+  .btn-coral:hover{background:#E05E4C}
+  .hero-copy>.btn{display:flex;width:100%}
+
+  /* ---------- builder (mobile-sized card by default) ---------- */
+  .builder{
+    background:rgba(34,51,110,.4);
+    border:1px solid rgba(255,246,233,.22);
+    border-radius:22px;padding:22px 18px;
+    box-shadow:0 30px 80px -30px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.16);
+    position:relative;min-height:0;z-index:1;
+    display:flex;flex-direction:column;
+    backdrop-filter:blur(22px) saturate(160%);
+    -webkit-backdrop-filter:blur(22px) saturate(160%);
+    overflow:hidden;
+  }
+  .builder::before{
+    content:'';position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(135deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,0) 42%);
+  }
+  .builder-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+  .builder-label{
+    font-family:'Borel',cursive;font-size:1.15rem;color:var(--sky);line-height:1;padding-top:8px;
+  }
+  .dots{display:flex;gap:7px}
+  .dots span{width:9px;height:9px;border-radius:50%;background:rgba(255,246,233,.18);transition:background .2s,transform .2s}
+  .dots span.on{background:var(--sun);transform:scale(1.2)}
+  .bstep{display:none;flex:1;flex-direction:column}
+  .bstep.on{display:flex}
+  .bq{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:1.22rem;margin-bottom:14px}
+  .bq em{font-style:normal;color:var(--sun)}
+  .field-label{
+    font-family:'Baloo 2',sans-serif;font-weight:600;font-size:.82rem;
+    letter-spacing:.05em;text-transform:uppercase;
+    color:var(--paper-faint);margin:14px 0 8px;
+  }
+  .field-label:first-of-type{margin-top:0}
+  .text-input{
+    width:100%;min-height:48px;background:rgba(255,246,233,.07);
+    border:2px solid rgba(255,246,233,.2);border-radius:16px;
+    color:var(--paper);padding:13px 18px;font-size:1.05rem;font-family:'Montserrat',sans-serif;
+  }
+  .fav-other{margin-top:10px;font-size:.92rem;padding:11px 16px}
+  .text-input::placeholder{color:var(--paper-faint)}
+  .text-input:focus{outline:none;border-color:var(--sun)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    display:inline-flex;align-items:center;justify-content:center;min-height:44px;
+    background:rgba(255,246,233,.06);border:2px solid rgba(255,246,233,.18);
+    color:var(--paper-dim);border-radius:999px;padding:9px 15px;
+    font-family:'Baloo 2',sans-serif;font-size:.9rem;font-weight:600;
+    cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;
+  }
+  .chip:hover{border-color:var(--sky);color:var(--paper);transform:rotate(-1.5deg)}
+  .chip:active{transform:scale(.96)}
+  .chip:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+  .chip.active{background:var(--sun);border-color:var(--sun);color:var(--ink);transform:rotate(-1.5deg)}
+  .builder-nav{
+    display:flex;flex-direction:column-reverse;align-items:stretch;gap:10px;
+    margin-top:auto;padding-top:24px;
+  }
+  .builder-nav .btn{width:100%}
+  .back-link{
+    background:none;border:none;color:var(--paper-faint);font-family:'Baloo 2',sans-serif;
+    font-size:.95rem;font-weight:600;cursor:pointer;padding:8px 4px;text-align:center;
+  }
+  .back-link:hover{color:var(--paper)}
+
+  /* loading */
+  .loading-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:20px}
+  .loading-star{animation:spinbob 2.4s ease-in-out infinite}
+  @keyframes spinbob{
+    0%,100%{transform:rotate(-8deg) scale(1)}
+    50%{transform:rotate(8deg) scale(1.12)}
+  }
+  @media (prefers-reduced-motion:reduce){.loading-star{animation:none}}
+  .loading-msg{font-family:'Baloo 2',sans-serif;font-weight:600;font-size:1.15rem;color:var(--paper-dim);min-height:2em}
+
+  /* story preview (mobile-sized padding by default) */
+  .storybook{
+    background:var(--paper);color:var(--ink);border-radius:18px;
+    padding:22px 20px;position:relative;
+  }
+  .storybook h3{font-size:1.3rem;margin-bottom:10px;color:var(--ink)}
+  .storybook p{font-size:.98rem;line-height:1.75}
+  .storybook .page-note{margin-top:14px;font-size:.8rem;color:#8B87A8;font-style:italic}
+  .storybook .corner-doodle{position:absolute;top:-16px;right:-12px}
+  .gate{text-align:center;padding:22px 4px 0}
+  .gate p{font-size:.96rem;color:var(--paper-dim);margin-bottom:14px}
+  .gate strong{color:var(--paper)}
+  .gate-form{display:flex;flex-direction:column;gap:10px}
+  .gate-form .text-input{width:100%;border-radius:999px}
+  .gate-form .btn{width:100%}
+  .gate-note{font-size:.82rem;color:var(--paper-faint);margin-top:12px}
+  .gate-success{
+    display:none;align-items:center;gap:12px;text-align:left;
+    background:rgba(71,168,109,.16);border:2px solid var(--leaf);
+    border-radius:var(--radius);padding:16px 20px;
+    font-family:'Baloo 2',sans-serif;font-weight:600;
+  }
+
+  /* ---------- sections (mobile: single column, tighter padding) ---------- */
+  section{padding:64px 0;position:relative}
+  .section-head{max-width:660px;margin-bottom:52px}
+  .section-head h2{font-size:clamp(1.9rem,3.4vw,2.6rem);margin:16px 0 14px;font-weight:800}
+  .section-head p{color:var(--paper-dim);font-size:1.05rem}
+
+  .steps{display:grid;grid-template-columns:1fr;gap:26px}
+  .step{
+    background:rgba(34,51,110,.38);border:1px solid rgba(255,246,233,.16);
+    border-radius:var(--radius);padding:30px 28px;position:relative;
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  }
+  .step .script{font-size:1.05rem;color:var(--coral);display:block;margin-bottom:12px;line-height:1;padding-top:6px}
+  .step:nth-child(2) .script{color:var(--sky)}
+  .step:nth-child(3) .script{color:var(--sun)}
+  .step h3{font-size:1.3rem;margin-bottom:8px}
+  .step p{color:var(--paper-dim);font-size:.95rem}
+
+  .situations{background:var(--night-2);border-radius:36px;padding:72px 0;overflow:hidden}
+  .sit-groups{display:grid;grid-template-columns:1fr;gap:26px;position:relative;z-index:1}
+  .sit-group{
+    background:rgba(20,32,74,.55);border:1px solid rgba(255,246,233,.14);
+    border-radius:var(--radius);padding:28px;
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  }
+  .sit-group h3{font-size:1.2rem;margin-bottom:4px}
+  .sit-group:nth-child(1) h3{color:var(--sky)}
+  .sit-group:nth-child(2) h3{color:var(--coral)}
+  .sit-group:nth-child(3) h3{color:var(--sun)}
+  .sit-group:nth-child(4) h3{color:var(--leaf)}
+  .sit-group .sub{font-size:.88rem;color:var(--paper-faint);margin-bottom:16px}
+  .sit-tags{display:flex;flex-wrap:wrap;gap:8px}
+  .sit-tag{
+    font-family:'Baloo 2',sans-serif;font-size:.86rem;font-weight:600;color:var(--paper-dim);
+    background:rgba(255,246,233,.05);border:2px solid rgba(255,246,233,.14);
+    border-radius:999px;padding:5px 14px;
+  }
+
+  .trust-grid{display:grid;grid-template-columns:1fr;gap:40px;align-items:center}
+  .trust-copy h2{font-size:clamp(1.9rem,3.4vw,2.6rem);margin:16px 0 18px;font-weight:800}
+  .trust-copy p{color:var(--paper-dim);margin-bottom:18px}
+  .trust-points{list-style:none;margin-top:24px}
+  .trust-points li{padding-left:34px;position:relative;margin-bottom:16px;color:var(--paper-dim)}
+  .trust-points li svg{position:absolute;left:0;top:4px}
+  .trust-points strong{color:var(--paper)}
+  .trust-card{
+    background:var(--paper);color:var(--ink);border-radius:28px;padding:38px 36px;
+    box-shadow:0 30px 80px -30px rgba(0,0,0,.55);position:relative;
+    transform:rotate(1.2deg);
+  }
+  .trust-card .q{font-family:'Baloo 2',sans-serif;font-weight:600;font-size:1.32rem;line-height:1.45;margin-bottom:20px}
+  .trust-card .who{font-size:.92rem;font-weight:600;color:#6B6788}
+  .trust-card .who span{display:block;font-weight:400;color:#8B87A8}
+  .trust-card .corner-doodle{position:absolute;top:-22px;left:-18px}
+
+  .final{
+    background:var(--coral);color:var(--paper);
+    border-radius:36px;padding:76px 24px;text-align:center;position:relative;overflow:hidden;
+  }
+  .final h2{font-size:clamp(2rem,3.6vw,2.8rem);margin-bottom:14px;font-weight:800;position:relative;z-index:1}
+  .final .script{display:block;font-size:.65em;margin-bottom:6px;color:var(--paper);opacity:.9}
+  .final p{color:rgba(255,246,233,.85);max-width:33rem;margin:0 auto 32px;position:relative;z-index:1}
+  .final .btn{background:var(--paper);color:var(--coral);position:relative;z-index:1}
+  .final .btn:hover{background:#fff}
+
+  .faq{max-width:720px}
+  .faq details{border-bottom:2px solid rgba(255,246,233,.14);padding:20px 0}
+  .faq summary{
+    font-family:'Baloo 2',sans-serif;font-weight:700;font-size:1.08rem;cursor:pointer;list-style:none;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;
+  }
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";font-family:'Baloo 2',sans-serif;color:var(--sun);font-size:1.5rem;flex-shrink:0}
+  .faq details[open] summary::after{content:"–"}
+  .faq details p{color:var(--paper-dim);padding-top:12px;font-size:.96rem}
+
+  footer{
+    padding:44px 0 56px;color:var(--paper-faint);font-size:.88rem;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;
+  }
+  footer .wordmark{font-size:1.35rem}
+
+  /* =========================================================
+     PROGRESSIVE ENHANCEMENT — larger phones / small tablets
+     ========================================================= */
+  @media (min-width:400px){
+    .gate-form{flex-direction:row;flex-wrap:wrap}
+    .gate-form .text-input{flex:1;min-width:200px;width:auto}
+    .gate-form .btn{flex-shrink:0;width:auto}
+  }
+
+  @media (min-width:600px){
+    .wrap{padding:0 24px}
+    .nav-right{gap:18px}
+    .nav-login{font-size:.92rem;padding:8px 4px}
+    .nav-cta{font-size:.95rem;padding:11px 22px}
+    .builder{padding:30px;border-radius:28px}
+    .bq{font-size:1.4rem;margin-bottom:18px}
+    .field-label{margin:16px 0 10px}
+    .chips{gap:9px}
+    .chip{font-size:.92rem;padding:10px 18px}
+    .hero-sub{font-size:1.08rem}
+    .hero-proof{gap:20px}
+    .proof-item{font-size:.86rem;gap:9px}
+    .hero-copy>.btn{display:inline-flex;width:auto}
+    .btn{padding:15px 30px}
+    .builder-nav{flex-direction:row;justify-content:space-between;align-items:center;gap:12px}
+    .builder-nav .btn{width:auto}
+    .storybook{padding:26px 28px}
+  }
+
+  /* =========================================================
+     PROGRESSIVE ENHANCEMENT — desktop
+     ========================================================= */
+  @media (min-width:920px){
+    header{padding:44px 0 90px}
+    .hero-grid{grid-template-columns:1fr 1.08fr;gap:52px}
+    .hero-copy{padding-top:22px}
+    .steps{grid-template-columns:repeat(3,1fr)}
+    .sit-groups{grid-template-columns:repeat(2,1fr)}
+    .trust-grid{grid-template-columns:1fr 1fr;gap:60px}
+    section{padding:88px 0}
+    .builder{min-height:540px}
+    .doodle{display:block}
+  }
+</style>
+</head>
+<body>
+
+<!-- reusable doodle defs -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="d-star">
+      <path d="M50 6 L60 34 L92 36 L68 57 L76 90 L50 72 L24 90 L32 57 L8 36 L40 34 Z"
+            fill="var(--sun)" stroke="var(--sun)" stroke-width="14" stroke-linejoin="round"/>
+      <circle cx="42" cy="46" r="3.4" fill="var(--ink)"/>
+      <circle cx="60" cy="46" r="3.4" fill="var(--ink)"/>
+      <path d="M43 57 Q51 64 59 57" fill="none" stroke="var(--ink)" stroke-width="3.6" stroke-linecap="round"/>
+    </g>
+    <g id="d-cloud">
+      <path d="M28 62 a14 14 0 0 1 -2 -28 a17 17 0 0 1 33 -5 a13 13 0 0 1 13 22 a10 10 0 0 1 -8 11 Z"
+            fill="var(--sky)" stroke="var(--sky)" stroke-width="10" stroke-linejoin="round"/>
+      <path d="M33 40 q4 -4 8 0" fill="none" stroke="var(--ink)" stroke-width="3.2" stroke-linecap="round"/>
+      <path d="M50 40 q4 -4 8 0" fill="none" stroke="var(--ink)" stroke-width="3.2" stroke-linecap="round"/>
+      <path d="M40 51 q6 4 12 0" fill="none" stroke="var(--ink)" stroke-width="3.2" stroke-linecap="round"/>
+    </g>
+    <g id="d-flower">
+      <circle cx="50" cy="28" r="14" fill="var(--coral)"/>
+      <circle cx="72" cy="44" r="14" fill="var(--coral)"/>
+      <circle cx="64" cy="70" r="14" fill="var(--coral)"/>
+      <circle cx="36" cy="70" r="14" fill="var(--coral)"/>
+      <circle cx="28" cy="44" r="14" fill="var(--coral)"/>
+      <circle cx="50" cy="50" r="16" fill="var(--coral)"/>
+      <circle cx="44" cy="47" r="3.2" fill="var(--paper)"/>
+      <circle cx="58" cy="47" r="3.2" fill="var(--paper)"/>
+      <path d="M44 57 Q51 63 58 57" fill="none" stroke="var(--paper)" stroke-width="3.4" stroke-linecap="round"/>
+    </g>
+    <g id="d-moon">
+      <path d="M62 8 a44 44 0 1 0 26 74 a36 36 0 0 1 -26 -74 Z"
+            fill="var(--paper)" stroke="var(--paper)" stroke-width="8" stroke-linejoin="round"/>
+      <path d="M40 44 q4 -4 8 0" fill="none" stroke="var(--ink)" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M42 58 q6 5 13 1" fill="none" stroke="var(--ink)" stroke-width="3.4" stroke-linecap="round"/>
+    </g>
+    <g id="d-spark">
+      <path d="M50 14 Q54 42 82 50 Q54 58 50 86 Q46 58 18 50 Q46 42 50 14 Z"
+            fill="var(--leaf)" stroke="var(--leaf)" stroke-width="8" stroke-linejoin="round"/>
+    </g>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <nav>
+    <a class="wordmark" href="#">brave anyway</a>
+    <div class="nav-right">
+      <a class="nav-login" href="braveanyway-login-portal-mockup.html">Log in</a>
+      <a class="nav-cta" href="#builder">Create a story</a>
+    </div>
+  </nav>
+</div>
+
+<header>
+  <div class="glow glow-sun" aria-hidden="true"></div>
+  <div class="glow glow-coral" aria-hidden="true"></div>
+  <div class="glow glow-sky" aria-hidden="true"></div>
+  <svg class="doodle" style="top:8%;left:2.5%;animation-delay:.5s" width="74" height="74" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-moon"/></svg>
+  <svg class="doodle" style="top:64%;left:4%;animation-delay:3s" width="52" height="52" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-spark"/></svg>
+  <svg class="doodle" style="top:5%;right:3%;animation-delay:1.5s" width="66" height="66" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-cloud"/></svg>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">Co-written with child psychiatrists</span>
+        <h1>The story your child needs <span class="script">tonight</span></h1>
+        <p class="hero-sub">
+          First day of school. A new baby at home. Monsters under the bed.
+          Tell us what's on your child's mind, and get a personalized bedtime
+          story, starring them, where being scared and being brave happen
+          at the same time. Your first story is free.
+        </p>
+        <a class="btn" href="#builder">Create your child's free story</a>
+        <div class="hero-proof">
+          <span class="proof-item">
+            <svg width="18" height="18" viewBox="0 0 100 100"><use href="#d-star"/></svg>
+            Ready in under a minute
+          </span>
+          <span class="proof-item">
+            <svg width="18" height="18" viewBox="0 0 100 100"><use href="#d-spark"/></svg>
+            No account needed
+          </span>
+          <span class="proof-item">
+            <svg width="18" height="18" viewBox="0 0 100 100"><use href="#d-flower"/></svg>
+            Ages 2–10
+          </span>
+        </div>
+      </div>
+
+      <div class="builder" id="builder">
+        <div class="builder-head">
+          <span class="builder-label" data-blabel>tonight's story</span>
+          <div class="dots" aria-hidden="true">
+            <span class="on"></span><span></span><span></span>
+          </div>
+        </div>
+
+        <!-- STEP 1 -->
+        <div class="bstep on" data-step="1">
+          <p class="bq">Who's tonight's <em>hero</em>?</p>
+          <p class="field-label">Their first name</p>
+          <input class="text-input" id="kidName" type="text" placeholder="e.g. Mia" maxlength="20" autocomplete="off" autocapitalize="words" enterkeyhint="next">
+          <p class="field-label">The hero is a…</p>
+          <div class="chips" data-pick="hero">
+            <button class="chip" data-val="girl">Girl</button>
+            <button class="chip" data-val="boy">Boy</button>
+            <button class="chip" data-val="kid">Just a kid</button>
+          </div>
+          <p class="field-label">Age</p>
+          <div class="chips" data-pick="age">
+            <button class="chip" data-val="2–4">2–4</button>
+            <button class="chip" data-val="5–7">5–7</button>
+            <button class="chip" data-val="8–10">8–10</button>
+          </div>
+          <p class="field-label">They can't get enough of…</p>
+          <div class="chips" data-pick="fav">
+            <button class="chip" data-val="dinosaurs">Dinosaurs</button>
+            <button class="chip" data-val="space">Space</button>
+            <button class="chip" data-val="princesses">Princesses</button>
+            <button class="chip" data-val="animals">Animals</button>
+            <button class="chip" data-val="soccer">Soccer</button>
+            <button class="chip" data-val="superheroes">Superheroes</button>
+            <button class="chip" data-val="mermaids">Mermaids</button>
+          </div>
+          <input class="text-input fav-other" id="favOther" type="text" placeholder="Or tell us what they love (unicorns? trucks? bugs?)" maxlength="30" autocomplete="off">
+          <div class="builder-nav">
+            <span></span>
+            <button class="btn" id="toStep2" disabled>Continue</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="bstep" data-step="2">
+          <p class="bq" data-q2>What's on their mind tonight?</p>
+          <div class="chips" data-pick="situation">
+            <button class="chip" data-val="dark">Scared of the dark</button>
+            <button class="chip" data-val="school">First day of school</button>
+            <button class="chip" data-val="sibling">New baby at home</button>
+            <button class="chip" data-val="sleep">Won't sleep alone</button>
+            <button class="chip" data-val="moving">Moving to a new home</button>
+            <button class="chip" data-val="doctor">Doctor's visit</button>
+            <button class="chip" data-val="adventure">Just adventure tonight</button>
+          </div>
+          <div class="builder-nav">
+            <button class="back-link" data-back="1">← Back</button>
+            <button class="btn" id="createStory" disabled>Create the story</button>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="bstep" data-step="3">
+          <div class="loading-wrap">
+            <svg class="loading-star" width="84" height="84" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-star"/></svg>
+            <p class="loading-msg" data-loading>Warming up the nightlight…</p>
+          </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="bstep" data-step="4">
+          <div class="storybook">
+            <svg class="corner-doodle" width="46" height="46" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-star"/></svg>
+            <h3 data-title></h3>
+            <p data-excerpt></p>
+            <p class="page-note" data-pagenote></p>
+          </div>
+          <div class="gate">
+            <p data-gatecopy><strong>Where should we send the full story?</strong></p>
+            <form class="gate-form" data-gate>
+              <input class="text-input" type="email" placeholder="Your email" aria-label="Your email" inputmode="email" autocomplete="email" enterkeyhint="send" required>
+              <button class="btn" type="submit">Send my free story</button>
+            </form>
+            <p class="gate-note">Free, in your inbox before bedtime. No spam, no card.</p>
+            <div class="gate-success" role="status">
+              <svg width="30" height="30" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-star"/></svg>
+              <span data-successcopy>It's on its way. Check your inbox tonight.</span>
+            </div>
+          </div>
+          <div class="builder-nav">
+            <button class="back-link" data-restart>← Create another story</button>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <section id="how">
+    <div class="section-head">
+      <h2>Three minutes to set up.<br>Twenty seconds a night.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="script">step one</span>
+        <h3>Tell us who they are</h3>
+        <p>Their name, their age, the thing they love most in the world. That's what turns a story into <em>their</em> story.</p>
+      </div>
+      <div class="step">
+        <span class="script">step two</span>
+        <h3>Pick what's on their mind</h3>
+        <p>A big change, a little fear, a brave first, or nothing at all, and it's pure adventure tonight. One tap.</p>
+      </div>
+      <div class="step">
+        <span class="script">step three</span>
+        <h3>Read tonight's story</h3>
+        <p>A gentle, age-perfect story where your child is the hero who faces exactly that, and comes out okay.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <section class="situations">
+    <svg class="doodle" style="top:6%;right:4%;animation-delay:2s" width="64" height="64" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-flower"/></svg>
+    <svg class="doodle" style="bottom:8%;left:3%;animation-delay:4.5s" width="56" height="56" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-star"/></svg>
+    <div class="wrap">
+      <div class="section-head">
+        <h2>There's always something.<br>There's always a story.</h2>
+        <p>Kids don't run out of big feelings, and Brave Anyway doesn't run out of stories to meet them.</p>
+      </div>
+      <div class="sit-groups">
+        <div class="sit-group">
+          <h3>Little fears</h3>
+          <p class="sub">For the nights when the world feels a bit too big.</p>
+          <div class="sit-tags">
+            <span class="sit-tag">Scared of the dark</span>
+            <span class="sit-tag">Nightmares</span>
+            <span class="sit-tag">Thunderstorms</span>
+            <span class="sit-tag">Won't sleep alone</span>
+            <span class="sit-tag">Doctor's visit</span>
+          </div>
+        </div>
+        <div class="sit-group">
+          <h3>Big changes</h3>
+          <p class="sub">For the weeks when everything is new.</p>
+          <div class="sit-tags">
+            <span class="sit-tag">First day of school</span>
+            <span class="sit-tag">New sibling</span>
+            <span class="sit-tag">Moving house</span>
+            <span class="sit-tag">Saying goodbye</span>
+          </div>
+        </div>
+        <div class="sit-group">
+          <h3>Brave firsts</h3>
+          <p class="sub">For the small victories that deserve a legend.</p>
+          <div class="sit-tags">
+            <span class="sit-tag">First swim lesson</span>
+            <span class="sit-tag">Riding a bike</span>
+            <span class="sit-tag">First haircut</span>
+            <span class="sit-tag">Big-kid bed</span>
+            <span class="sit-tag">Lost first tooth</span>
+          </div>
+        </div>
+        <div class="sit-group">
+          <h3>Just adventure</h3>
+          <p class="sub">Because most nights, nothing's wrong, and dragons still need taming.</p>
+          <div class="sit-tags">
+            <span class="sit-tag">Space voyage</span>
+            <span class="sit-tag">Dinosaur island</span>
+            <span class="sit-tag">Underwater kingdom</span>
+            <span class="sit-tag">You + your best friend</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <section id="trust">
+    <div class="trust-grid">
+      <div class="trust-copy">
+        <h2>Written with child psychiatrists. Personalized by you.</h2>
+        <p>
+          Children process big feelings through characters in a way they can't through
+          conversation. Therapists have used stories this way for decades. Brave Anyway
+          brings it to your child's bedside.
+        </p>
+        <ul class="trust-points">
+          <li>
+            <svg width="22" height="22" viewBox="0 0 100 100"><use href="#d-star"/></svg>
+            <strong>Every situation follows a clinically-reviewed story arc.</strong> The hero is allowed to be scared and brave at the same time. No lectures, no "that's silly," just gentle modeling.
+          </li>
+          <li>
+            <svg width="22" height="22" viewBox="0 0 100 100"><use href="#d-spark"/></svg>
+            <strong>Age-tuned, always.</strong> The same situation reads differently at 3 and at 7: vocabulary, length and emotional depth adapt.
+          </li>
+          <li>
+            <svg width="22" height="22" viewBox="0 0 100 100"><use href="#d-flower"/></svg>
+            <strong>Your child's world, safely.</strong> First names and favorite things only. No photos, no data about your child sold or shared. Ever.
+          </li>
+        </ul>
+      </div>
+      <div class="trust-card">
+        <svg class="corner-doodle" width="54" height="54" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-cloud"/></svg>
+        <p class="q">"A child who hears their own name in a story about courage isn't just entertained. They're rehearsing who they can become."</p>
+        <p class="who">Dr. [Name Placeholder]<span>Child psychiatrist · Brave Anyway story advisor</span></p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <section>
+    <div class="final">
+      <svg class="doodle" style="top:14%;left:7%;animation-delay:1s" width="58" height="58" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-star"/></svg>
+      <svg class="doodle" style="bottom:12%;right:6%;animation-delay:3.5s" width="64" height="64" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-cloud"/></svg>
+      <h2><span class="script">scared and brave,</span>at the very same time.</h2>
+      <p>It takes less than a minute, and the first one's on us. See the look on their face when the hero has their name.</p>
+      <a class="btn" href="#builder">Create your child's free story</a>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <section>
+    <div class="section-head">
+      <h2>The fine print, in plain words.</h2>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>Is this written by AI?</summary>
+        <p>The personalization is, the foundations aren't. Every situation follows a narrative framework built and reviewed with child psychiatrists. The technology fills in your child's world inside those rails; it never improvises on the emotional content.</p>
+      </details>
+      <details>
+        <summary>What about my child's data?</summary>
+        <p>We ask only for a first name, an age and a few favorite things. No photos, no last names, no location. This information is used solely to create your stories and is never sold or shared.</p>
+      </details>
+      <details>
+        <summary>What ages is it for?</summary>
+        <p>Ages 2 to 10. Every story adapts its length, vocabulary and emotional depth to your child's age. A story about the first day of school reads very differently at 3 than at 7.</p>
+      </details>
+      <details>
+        <summary>How much does it cost?</summary>
+        <p>Your first story is completely free, no card required. After that, your first month is $14.99, then $19.99/month, and you can cancel anytime. Prefer to pay once a year? The annual plan is $99, about $8.25/month.</p>
+      </details>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <footer>
+    <a class="wordmark" href="#">brave anyway</a>
+    <span>© 2026 Brave Anyway · Made for bedtime</span>
+  </footer>
+</div>
+
+<script>
+  const state = { name:'', hero:'', age:'', fav:'', favCustom:'', situation:'' };
+
+
+  const pronouns = {
+    girl:{sub:'she',obj:'her',poss:'her',Sub:'She',Poss:'Her',sib:'big sister'},
+    boy:{sub:'he',obj:'him',poss:'his',Sub:'He',Poss:'His',sib:'big brother'},
+    kid:{sub:'they',obj:'them',poss:'their',Sub:'They',Poss:'Their',sib:'big kid'}
+  };
+
+  const sidekicks = {
+    dinosaurs:'a small, extremely brave triceratops named Pip',
+    space:'a pocket-sized comet named Zip',
+    princesses:'a very sensible princess named Plume',
+    animals:'a golden fox named Ember',
+    soccer:'a soccer ball that glowed softly in the dark',
+    superheroes:'a cape that only worked when you were brave',
+    mermaids:'a mermaid\u2019s lucky pearl'
+  };
+
+  const stories = {
+    dark:(n,p,s)=>({
+      title:`${n} and the Night Patrol`,
+      text:`${n} knew the shadows in ${p.poss} room were just shadows. But knowing and feeling are two different things, even for the captain of the Night Patrol. Tonight, flashlight in one hand and ${s} at ${p.poss} side, ${p.sub} would meet the dark and ask it, politely, what it was so busy hiding…`
+    }),
+    school:(n,p,s)=>({
+      title:`${n} and the Brand-New Castle`,
+      text:`Tomorrow, ${n} would walk through the gates of a brand-new castle called school. ${p.Poss} tummy was doing little flips, the very same flips explorers feel right before they discover something wonderful. So ${p.sub} packed the essentials: one brave smile, one favorite snack, and ${s}, just in case…`
+    }),
+    sibling:(n,p,s)=>({
+      title:`${n}, the Greatest ${p.sib.charAt(0).toUpperCase()+p.sib.slice(1)}`,
+      text:`There was a brand-new tiny person in ${n}'s house, and everyone kept saying how small the baby was. But nobody had noticed the most important thing: every legendary ${p.sib} starts out exactly like ${n}, wondering if there's still enough love to go around. (There is. There always is. Even ${s} knew that.)`
+    }),
+    sleep:(n,p,s)=>({
+      title:`Captain ${n}'s First Voyage`,
+      text:`${n}'s bed was not just a bed. It was a ship, and tonight was ${p.poss} very first solo voyage. The crew stood ready: one worn-out rabbit, recently promoted to first mate, and ${s}, officially in charge of snacks. The captain was almost ready too. Almost counts for a lot, on first voyages…`
+    }),
+    moving:(n,p,s)=>({
+      title:`${n} and the House That Waited`,
+      text:`Somewhere across town, an empty house was waiting, and it was a little nervous. Houses always are, before they meet their new kid. It didn't know yet about ${n}, or about ${s}, or how quickly a strange place becomes home once the right person hangs up their coat…`
+    }),
+    doctor:(n,p,s)=>({
+      title:`${n} the Fearless (Mostly)`,
+      text:`In the morning, ${n} had an appointment with Dr. Song, who kept stickers in her pocket and secrets in her stethoscope. Being a little nervous before the doctor is a rule of the universe, even knights follow it. So ${n} brought ${s}, took one deep dragon-breath, and decided to be nervous and brave at the very same time…`
+    }),
+    adventure:(n,p,s)=>({
+      title:`${n} and the Door in the Wallpaper`,
+      text:`The door appeared at exactly bedtime, small, golden, and right where the wallpaper used to be. It had a note: "For ${n} only." Well. There are rules about mysterious golden doors, and rule number one is that you bring ${s} with you…`
+    })
+  };
+
+  const loadingMsgs = [
+    'Warming up the nightlight…',
+    n=>`Teaching the dragon to say "${n}"…`,
+    'Tucking in the plot…',
+    'Adding one spoonful of brave…'
+  ];
+
+  const dots = document.querySelectorAll('.dots span');
+  function goStep(num){
+    document.querySelectorAll('.bstep').forEach(s=>s.classList.toggle('on', s.dataset.step==num));
+    dots.forEach((d,i)=>d.classList.toggle('on', i < Math.min(num,3)));
+  }
+  function validate1(){
+    document.getElementById('toStep2').disabled =
+      !(state.name.trim().length>0 && state.hero && state.age && state.fav);
+  }
+  function validate2(){
+    document.getElementById('createStory').disabled = !state.situation;
+  }
+  function titleCase(str){
+    return str.trim().replace(/\s+/g,' ').split(' ')
+      .map(w=>w.charAt(0).toUpperCase()+w.slice(1).toLowerCase()).join(' ');
+  }
+
+  document.getElementById('kidName').addEventListener('input', e=>{
+    state.name = e.target.value; validate1();
+  });
+
+  const favOtherInput = document.getElementById('favOther');
+  favOtherInput.addEventListener('input', e=>{
+    const val = e.target.value.trim();
+    document.querySelectorAll('[data-pick="fav"] .chip').forEach(c=>c.classList.remove('active'));
+    state.favCustom = val;
+    state.fav = val ? 'custom' : '';
+    validate1();
+  });
+
+  document.querySelectorAll('[data-pick]').forEach(group=>{
+    const key = group.dataset.pick;
+    group.querySelectorAll('.chip').forEach(chip=>{
+      chip.addEventListener('click', ()=>{
+        group.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+        chip.classList.add('active');
+        state[key] = chip.dataset.val;
+        if(key==='fav'){ favOtherInput.value=''; state.favCustom=''; }
+        if(key==='situation'){ validate2(); } else { validate1(); }
+      });
+    });
+  });
+
+  document.getElementById('toStep2').addEventListener('click', ()=>{
+    document.querySelector('[data-q2]').innerHTML =
+      `What's on <em>${titleCase(state.name)}</em>'s mind tonight?`;
+    goStep(2);
+  });
+
+  document.querySelectorAll('[data-back]').forEach(b=>{
+    b.addEventListener('click', ()=>goStep(b.dataset.back));
+  });
+
+  document.getElementById('createStory').addEventListener('click', ()=>{
+    goStep(3);
+    const msgEl = document.querySelector('[data-loading]');
+    const n = titleCase(state.name);
+    let i = 0;
+    msgEl.textContent = typeof loadingMsgs[0]==='function' ? loadingMsgs[0](n) : loadingMsgs[0];
+    const cycle = setInterval(()=>{
+      i++;
+      if(i >= loadingMsgs.length){ clearInterval(cycle); return; }
+      const m = loadingMsgs[i];
+      msgEl.textContent = typeof m==='function' ? m(n) : m;
+    }, 900);
+    setTimeout(()=>{
+      clearInterval(cycle);
+      renderStory();
+      goStep(4);
+    }, 2800);
+  });
+
+  function renderStory(){
+    const n = titleCase(state.name);
+    const p = pronouns[state.hero] || pronouns.kid;
+    const s = (state.fav === 'custom' && state.favCustom)
+      ? `a very loyal companion who loves ${state.favCustom.toLowerCase()} just as much as ${p.sub} does`
+      : (sidekicks[state.fav] || 'a very loyal flashlight');
+    const st = stories[state.situation](n,p,s);
+    document.querySelector('[data-title]').textContent = st.title;
+    document.querySelector('[data-excerpt]').textContent = st.text;
+    document.querySelector('[data-pagenote]').textContent =
+      `Page 1 of 7 · written for ${n}, age ${state.age}`;
+    document.querySelector('[data-gatecopy]').innerHTML =
+      `<strong>Where should we send ${n}'s full story?</strong>`;
+    document.querySelector('[data-successcopy]').textContent =
+      `${n}'s story is on its way. Check your inbox tonight.`;
+    document.querySelector('[data-blabel]').textContent = `${n.toLowerCase()}'s story`;
+  }
+
+  document.querySelector('[data-gate]').addEventListener('submit', e=>{
+    e.preventDefault();
+    e.target.style.display='none';
+    document.querySelector('.gate-note').style.display='none';
+    document.querySelector('[data-gatecopy]').style.display='none';
+    document.querySelector('.gate-success').style.display='flex';
+  });
+
+  document.querySelector('[data-restart]').addEventListener('click', ()=>{
+    state.situation='';
+    document.querySelectorAll('[data-pick="situation"] .chip').forEach(c=>c.classList.remove('active'));
+    validate2();
+    document.querySelector('[data-gate]').style.display='flex';
+    document.querySelector('.gate-note').style.display='block';
+    document.querySelector('[data-gatecopy]').style.display='block';
+    document.querySelector('.gate-success').style.display='none';
+    goStep(2);
+    document.getElementById('builder').scrollIntoView({behavior:'smooth',block:'center'});
+  });
+</script>
+</body>
+</html>
