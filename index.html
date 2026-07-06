@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Borel&family=Baloo+2:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-  :root{ 
+  :root{
     --night:#14204A;
     --night-2:#1B2A5E;
     --card:#22336E;
@@ -25,7 +25,7 @@
     --radius:22px;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;overflow-x:hidden}
   body{
     background:var(--night);
     color:var(--paper);
@@ -58,24 +58,17 @@
     text-decoration:none;line-height:1;padding-top:10px;
   }
   .nav-cta{
-    font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.85rem;text-decoration:none;
+    font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.95rem;text-decoration:none;
     color:var(--ink);background:var(--sun);
-    padding:9px 16px;border-radius:999px;transition:transform .15s,background .2s;
+    padding:11px 22px;border-radius:999px;transition:transform .15s,background .2s;
     white-space:nowrap;
   }
   .nav-cta:hover{background:var(--sun-deep);transform:rotate(-2deg)}
-  .nav-right{display:flex;align-items:center;gap:10px}
-  .nav-login{
-    background:none;border:none;color:var(--paper-dim);cursor:pointer;
-    font-family:'Baloo 2',sans-serif;font-weight:600;font-size:.82rem;
-    padding:8px 2px;-webkit-tap-highlight-color:transparent;white-space:nowrap;
-  }
-  .nav-login:hover{color:var(--paper)}
 
   /* ---------- ambient glow (sits behind the glass builder card) ---------- */
   .glow{position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none;z-index:0;opacity:.55}
   .glow-sun{width:280px;height:280px;background:var(--sun);top:-40px;right:8%}
-  .glow-coral{width:240px;height:240px;background:var(--coral);top:38%;left:-60px}
+  .glow-coral{width:240px;height:240px;background:var(--coral);top:38%;left:2%}
   .glow-sky{width:260px;height:260px;background:var(--sky);bottom:-60px;right:20%}
   @media (min-width:920px){.glow{opacity:.4}}
   header>.wrap{position:relative;z-index:1}
@@ -304,9 +297,6 @@
 
   @media (min-width:600px){
     .wrap{padding:0 24px}
-    .nav-right{gap:18px}
-    .nav-login{font-size:.92rem;padding:8px 4px}
-    .nav-cta{font-size:.95rem;padding:11px 22px}
     .builder{padding:30px;border-radius:28px}
     .bq{font-size:1.4rem;margin-bottom:18px}
     .field-label{margin:16px 0 10px}
@@ -384,10 +374,7 @@
 <div class="wrap">
   <nav>
     <a class="wordmark" href="#">brave anyway</a>
-    <div class="nav-right">
-      <a class="nav-login" href="braveanyway-login-portal-mockup.html">Log in</a>
-      <a class="nav-cta" href="#builder">Create a story</a>
-    </div>
+    <a class="nav-cta" href="#builder">Create a story</a>
   </nav>
 </div>
 
@@ -686,6 +673,13 @@
 </div>
 
 <script>
+  // ---- CONCIERGE MVP: paste your Zapier "Catch Hook" or Make "Custom
+  // webhook" URL below. Every free-story email submission will POST the
+  // parent's email plus the story details here, so your automation can
+  // send the real story email (Phase 0: reviewed by hand) followed by
+  // the Stripe Payment Link email. Leave blank to keep it fully demo/local.
+  const WEBHOOK_URL = ''; // e.g. 'https://hooks.zapier.com/hooks/catch/xxxxx/xxxxx/'
+
   const state = { name:'', hero:'', age:'', fav:'', favCustom:'', situation:'' };
 
 
@@ -835,6 +829,25 @@
 
   document.querySelector('[data-gate]').addEventListener('submit', e=>{
     e.preventDefault();
+    const email = e.target.querySelector('input[type="email"]').value.trim();
+
+    if(WEBHOOK_URL){
+      fetch(WEBHOOK_URL, {
+        method:'POST',
+        mode:'no-cors', // Zapier/Make webhooks don't need CORS read-back; we don't need the response
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          email: email,
+          kid_name: state.name,
+          hero: state.hero,
+          age_band: state.age,
+          favorite_thing: (state.fav === 'custom' && state.favCustom) ? state.favCustom : state.fav,
+          situation: state.situation,
+          submitted_at: new Date().toISOString()
+        })
+      }).catch(err => console.error('Webhook submission failed:', err));
+    }
+
     e.target.style.display='none';
     document.querySelector('.gate-note').style.display='none';
     document.querySelector('[data-gatecopy]').style.display='none';
